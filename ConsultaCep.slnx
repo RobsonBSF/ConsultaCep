@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="ConsultaCep/ConsultaCep.csproj" />
+  <Project Path="ConsultaCepApi/ConsultaCepApi.csproj" Id="3ae0187a-f061-43be-ae61-55c93315fd9b" />
+</Solution>

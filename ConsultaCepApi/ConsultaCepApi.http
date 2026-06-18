@@ -1,0 +1,6 @@
+@ConsultaCepApi_HostAddress = http://localhost:5010
+
+GET {{ConsultaCepApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
