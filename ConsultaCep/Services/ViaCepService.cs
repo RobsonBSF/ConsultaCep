@@ -1,21 +1,14 @@
 ﻿using ConsultaCep.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
 namespace ConsultaCep.Services
 {
     internal class ViaCepService
     {
-        private readonly HttpClient _httpClient;
-        private readonly JsonSerializerOptions _jsonSerializerOptions;
+        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
 
-        public ViaCepService()
-        {
-            _httpClient = new HttpClient();
-            _jsonSerializerOptions = new JsonSerializerOptions {PropertyNameCaseInsensitive = true};
-        }
+        public ViaCepService() {}
 
         public async Task<Endereco> BuscarCepAsync(string cep)
         {
@@ -23,7 +16,7 @@ namespace ConsultaCep.Services
             {
                 if (cep.Length != 8 || !cep.All(char.IsDigit))
                 {
-                    throw new ArgumentException("Cep inválido. deve conter 8 números.");
+                    throw new ArgumentException("Cep inválido. Deve conter 8 números.");
                 }
 
                 var response = await _httpClient.GetAsync($"https://viacep.com.br/ws/{cep}/json/");
@@ -42,16 +35,16 @@ namespace ConsultaCep.Services
                     throw new Exception("Erro ao converter dados da API.");
                 }
 
-                if (endereco.Erro)
+                if (endereco.Erro == "true")
                 {
-                    throw new Exception("Cep não encontrado.");
+                    throw new Exception("CEP não encontrado.");
                 }
 
                 return endereco;
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("Erro de conexão com a API");
+                throw new Exception($"Erro de conexão com a API: {ex}");
             }
         }
     }

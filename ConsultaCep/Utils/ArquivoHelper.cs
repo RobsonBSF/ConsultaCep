@@ -1,18 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace ConsultaCep.Utils
 {
     internal class ArquivoHelper
     {
-        private const string FilePath = "historico.txt";
+        private static readonly string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
 
         public static void Salvar(string cep)
         {
-            using (var stream = new StreamWriter(FilePath, append: true, Encoding.UTF8))
+            try
             {
-                stream.WriteLine($"{cep} - {DateTime.Now}");
+                using var stream = new StreamWriter(FilePath, append: true, Encoding.UTF8);
+                stream.WriteLine($"{cep} - {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
+            } 
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Erro ao salvar histórico: {ex.Message}");
             }
         }
 
