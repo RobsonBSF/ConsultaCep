@@ -6,7 +6,7 @@ namespace ConsultaCep.Utils
     {
         private static readonly string FilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "historico.txt");
 
-        public static void Salvar(string cep)
+        public void Salvar(string cep)
         {
             try
             {
@@ -15,11 +15,11 @@ namespace ConsultaCep.Utils
             } 
             catch (Exception ex)
             {
-                Console.WriteLine($"Erro ao salvar histórico: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
 
-        public static List<string> LerHistorico()
+        public List<string> LerHistorico()
         {
             if (!File.Exists(FilePath))
             {

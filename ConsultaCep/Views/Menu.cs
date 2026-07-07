@@ -5,7 +5,16 @@ namespace ConsultaCep.Views
 {
     internal class Menu
     {
-        public static async Task ExibirMenu(ViaCepService service)
+        private readonly ViaCepService _service;
+        private readonly ArquivoHelper _arquivoHelper;
+
+        public Menu(ViaCepService service, ArquivoHelper arquivoHelper)
+        {
+            _service = service;
+            _arquivoHelper = arquivoHelper;
+        }
+
+        public async Task ExibirMenu()
         {
             bool continuar = true;
 
@@ -29,7 +38,7 @@ namespace ConsultaCep.Views
                             Console.Write("Digite o CEP: ");
                             string? cep = Console.ReadLine();
 
-                            var endereco = await service.BuscarCepAsync(cep);
+                            var endereco = await _service.BuscarCepAsync(cep);
 
                             Console.WriteLine();
                             Console.WriteLine($"CEP --------> {endereco.Cep}");
@@ -38,7 +47,14 @@ namespace ConsultaCep.Views
                             Console.WriteLine($"Cidade -----> {endereco.Localidade}");
                             Console.WriteLine($"UF ---------> {endereco.Uf}");
 
-                            ArquivoHelper.Salvar(cep);
+                            try
+                            {
+                                _arquivoHelper.Salvar(cep);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine($"Erro ao salvar histórico: {ex.Message}");
+                            }
                         }
                         catch (Exception ex)
                         {
@@ -46,7 +62,7 @@ namespace ConsultaCep.Views
                         }
                         break;
                     case "2":
-                        var historico = ArquivoHelper.LerHistorico();
+                        var historico = _arquivoHelper.LerHistorico();
 
                         if (historico.Count == 0)
                         {

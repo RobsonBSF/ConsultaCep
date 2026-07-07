@@ -5,10 +5,14 @@ namespace ConsultaCep.Services
 {
     internal class ViaCepService
     {
-        private static readonly HttpClient _httpClient = new HttpClient();
-        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        private readonly HttpClient _httpClient;
+        private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public ViaCepService() {}
+        public ViaCepService(HttpClient httpClient, JsonSerializerOptions jsonSerializerOptions)
+        {
+            _httpClient = httpClient;
+            _jsonSerializerOptions = jsonSerializerOptions;
+        }
 
         public async Task<Endereco> BuscarCepAsync(string cep)
         {
@@ -35,7 +39,7 @@ namespace ConsultaCep.Services
                     throw new Exception("Erro ao converter dados da API.");
                 }
 
-                if (endereco.Erro == "true")
+                if ("true".Equals(endereco.Erro, StringComparison.OrdinalIgnoreCase))
                 {
                     throw new Exception("CEP não encontrado.");
                 }

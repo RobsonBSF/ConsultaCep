@@ -1,5 +1,7 @@
 ﻿using ConsultaCep.Services;
+using ConsultaCep.Utils;
 using ConsultaCep.Views;
+using System.Text.Json;
 
 namespace ConsultaCep
 {
@@ -7,9 +9,15 @@ namespace ConsultaCep
     {
         static async Task Main(string[] args)
         {
-            ViaCepService service = new ViaCepService();
-            
-            await Menu.ExibirMenu(service);
+            JsonSerializerOptions jsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+            HttpClient httpClient = new();
+
+            ViaCepService service = new(httpClient, jsonSerializerOptions);
+            ArquivoHelper arquivoHelper = new();
+
+            Menu menu = new(service, arquivoHelper);
+
+            await menu.ExibirMenu();
         }
     }
 }
